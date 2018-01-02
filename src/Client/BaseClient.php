@@ -64,9 +64,10 @@ abstract class BaseClient implements ClientInterface {
 
     /**
      * 发送请求获取数据,获取结果
-     * @return [type] [description]
+     * @param  string $data [description]
+     * @return [type]       [description]
      */
-    public function exec()
+    public function exec(string $data)
     {
         if (null === $this->client) {
             $this->initialization();
