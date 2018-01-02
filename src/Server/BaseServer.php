@@ -51,6 +51,7 @@ abstract class BaseServer implements ServerInterface {
             'daemonize'             => 0,
             'log_file'              => '/var/log/swoole.log',
         ], $config);
+        return $this;
     }
 
     
