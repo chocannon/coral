@@ -1,0 +1,88 @@
+<?php
+// +----------------------------------------------------------------------
+// | 基础Client
+// +----------------------------------------------------------------------
+// | Author: chocannon
+// +----------------------------------------------------------------------
+namespace Coral\Client;
+
+use Coral\Traits;
+use Coral\Utility\Package;
+use Coral\Protocol\ClientInterface;
+
+abstract class BaseClient implements ClientInterface {
+    use Traits\ClientCallBack;
+
+    protected $client   = null;
+    protected $host     = '0.0.0.0';
+    protected $port     = 9501;
+    protected $sockType = SWOOLE_SOCK_TCP;
+    protected $config   = [];
+    protected $timeout  = 0.5;
+    protected $syncType = SWOOLE_SOCK_ASYNC;
+
+    /**
+     * 配置服务参数
+     * @param array $config 参数数组
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = array_merge([
+            'open_eof_check'        => 1,
+            'package_eof'           => "\r\n",
+            'package_max_length'    => 1024 * 1024 * 2,
+            'open_length_check'     => 1,
+            'package_length_type'   => 'N',
+            'package_length_offset' => 0,
+            'package_body_offset'   => 4,
+        ], $config);
+    }
+
+
+    /**
+     * 初始化服务
+     * @return [type] [description]
+     */
+    protected function initialization()
+    {
+        $this->client = new \Swoole\Client($this->sockType, $this->syncType);
+        if (null === $this->client) {
+            throw new \Exception("Error Init Swoole Client", 1);
+        }
+
+        $this->client->set($this->config);
+        if (SWOOLE_SOCK_ASYNC === $this->syncType) {
+            $this->cli->on('Connect', [$this, 'onConnect']);
+            $this->cli->on('Receive', [$this, 'onReceive']);
+            $this->cli->on('Error',   [$this, 'onError']);
+            $this->cli->on('Close',   [$this, 'onClose']);
+        }
+
+        return $this->client;
+    }
+
+
+    /**
+     * 发送请求获取数据,获取结果
+     * @return [type] [description]
+     */
+    public function exec()
+    {
+        if (null === $this->client) {
+            $this->initialization();
+        }
+        
+        if (!$this->client->connect($this->host, $this->port, $this->timeout)) {
+            throw new \Exception("Connect Failed!", $this->cli->errCode);
+        }
+
+        $data = Package::encode($data);
+        if (!$this->client->send($data)) {
+            throw new \Exception("Send Failed!", $this->cli->errCode);
+        }
+        
+        $result = $this->client->recv();
+        $this->client->close();
+        return Package::decode($result);
+    }
+}

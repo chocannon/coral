@@ -1,0 +1,19 @@
+{
+    "name": "chocannon/coral",
+    "type": "library",
+    "description": "the swoole server lib",
+    "keywords": ["coral", "swoole"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "chocannon",
+            "email": "chocannon@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-4": { "Coral\\": "src" }
+    }
+}
