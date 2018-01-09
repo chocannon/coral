@@ -4,7 +4,7 @@
 // +----------------------------------------------------------------------
 // | Author: chocannon
 // +----------------------------------------------------------------------
-namespace Coral\Protocol;
+namespace Coral\Interfs;
 
 interface ClientInterface
 {

@@ -6,12 +6,12 @@
 // +----------------------------------------------------------------------
 namespace Coral\Client;
 
-use Coral\Traits;
 use Coral\Utility\Package;
-use Coral\Protocol\ClientInterface;
+use Coral\Traits\ClientCallBack;
+use Coral\Interfs\ClientInterface;
 
 abstract class BaseClient implements ClientInterface {
-    use Traits\ClientCallBack;
+    use ClientCallBack;
 
     protected $client   = null;
     protected $host     = '0.0.0.0';

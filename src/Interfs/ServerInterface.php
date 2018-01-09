@@ -4,7 +4,7 @@
 // +----------------------------------------------------------------------
 // | Author: chocannon
 // +----------------------------------------------------------------------
-namespace Coral\Protocol;
+namespace Coral\Interfs;
 
 interface ServerInterface
 {
@@ -14,9 +14,6 @@ interface ServerInterface
     public function onManagerStop(\Swoole\Server $serv);
     public function onWorkerStart(\Swoole\Server $server, int $workerId);
     public function onWorkerStop(\Swoole\Server $server, int $workerId);
-    public function onConnect(\Swoole\Server $serv, int $fd, int $reactorId);
-    public function onClose(\Swoole\Server $serv, $fd, $reactorId);
-    public function onReceive(\Swoole\Server $serv, int $fd, int $reactorId, string $data);
     public function onTask(\Swoole\Server $serv, int $taskId, int $workId, string $data);
     public function onFinish(\Swoole\Server $serv, int $taskId, string $data);
 }

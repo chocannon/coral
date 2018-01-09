@@ -1,32 +1,34 @@
 <?php
 // +----------------------------------------------------------------------
-// | 基础Server
+// | TcpServer
 // +----------------------------------------------------------------------
 // | Author: chocannon
 // +----------------------------------------------------------------------
 namespace Coral\Server;
 
 use Coral\Traits;
-use Coral\Protocol\ServerInterface;
+use Coral\Interfs\ServerInterface;
 
 abstract class BaseServer implements ServerInterface {
     use Traits\Driver;
     use Traits\ServerCallBack;
 
     protected $swoole      = null;
-    protected $processName = 'SwooleServer';
+    protected $processName = 'SwooleTcpServer';
     protected $host        = '0.0.0.0';
     protected $port        = 9501;
     protected $mode        = SWOOLE_PROCESS;
     protected $sockType    = SWOOLE_SOCK_TCP;
     protected $config      = [];
     protected $runPath     = '/tmp';
+    protected $serverType  = 'Http';
     protected $masterPidFile;
     protected $managePidFile;
 
 
-    public function __construct()
+    public function __construct(string $serverType)
     {
+        $this->serverType    = ucfirst(strtolower($serverType));  
         $this->masterPidFile = $this->runPath . '/' . $this->processName . '.master.pid';
         $this->managePidFile = $this->runPath . '/' . $this->processName . '.manager.pid';
     }
@@ -62,27 +64,57 @@ abstract class BaseServer implements ServerInterface {
     protected function initialization()
     {
         // 实例化SWOOLE
-        $this->swoole = new \Swoole\Server($this->host, $this->port, $this->mode, $this->sockType);
+        switch ($this->serverType) {
+            case 'Http':
+                $this->swoole = new \Swoole\Http\Server(
+                    $this->host, $this->port, $this->mode, $this->sockType);
+                break;
+            case 'Tcp':
+                $this->swoole = new \Swoole\Server(
+                    $this->host, $this->port, $this->mode, $this->sockType);
+                break;
+            case 'Webserver':
+                $this->swoole = new \Swoole\Websocket\Server(
+                    $this->host, $this->port, $this->mode, $this->sockType);
+                break;
+            default:
+                break;
+        }
         if (null === $this->swoole) {
-            throw new \Exception("Error Init Swoole Server", 1);
+            throw new \Exception("Error Init Swoole Server");
         }
 
         // 绑定回调函数
         $this->swoole->set($this->config);
         $this->swoole->on('Start',        [$this, 'onStart']);
         $this->swoole->on('Shutdown',     [$this, 'onShutdown']);
-        $this->swoole->on('ManagerStart', [$this, 'onManagerStart']);
+        $this->swoole->on('WorkerStop',   [$this, 'onWorkerStop']);
         $this->swoole->on('ManagerStop',  [$this, 'onManagerStop']);
         $this->swoole->on('WorkerStart',  [$this, 'onWorkerStart']);
-        $this->swoole->on('WorkerStop',   [$this, 'onWorkerStop']);
-        $this->swoole->on('Connect',      [$this, 'onConnect']);
-        $this->swoole->on('Receive',      [$this, 'onReceive']);
-        $this->swoole->on('Close',        [$this, 'onClose']);
+        $this->swoole->on('ManagerStart', [$this, 'onManagerStart']);
 
+        switch ($this->serverType) {
+            case 'Http':
+                $this->swoole->on('Request', [$this, 'onRequest']);
+                break;
+            case 'Tcp':
+                $this->swoole->on("Close",   [$this, 'onClose']);
+                $this->swoole->on("Receive", [$this, 'onReceive']);
+                $this->swoole->on("Connect", [$this, 'onConnect']);
+                break;
+            case 'Webserver':
+                $this->swoole->on('Open',    [$this, 'onOpen']);
+                $this->swoole->on('Request', [$this, 'onRequest']);
+                $this->swoole->on('Message', [$this, 'onMessage']);
+                break;
+            default:
+                break;
+        }
+        
         // 绑定TASK回调
         if (isset($this->config['task_worker_num'])) {
-            $this->swoole->on('Task',     [$this, 'onTask']);
-            $this->swoole->on('Finish',   [$this, 'onFinish']);
+            $this->swoole->on('Task',   [$this, 'onTask']);
+            $this->swoole->on('Finish', [$this, 'onFinish']);
         }
         
         return $this->swoole;

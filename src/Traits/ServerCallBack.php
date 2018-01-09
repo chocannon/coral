@@ -78,4 +78,19 @@ trait ServerCallBack{
     {
 
     }
+
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
+    {
+        
+    }
+
+    public function onOpen(\Swoole\Websocket\Server $serv, \Swoole\Http\Request $request)
+    {
+
+    }
+
+    public function onMessage(\Swoole\Websocket\Server $server, \Swoole\Websocket\Frame $frame)
+    {
+
+    }
 }
