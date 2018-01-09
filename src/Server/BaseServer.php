@@ -7,6 +7,7 @@
 namespace Coral\Server;
 
 use Coral\Traits;
+use Coral\Utility\Process;
 use Coral\Interfs\ServerInterface;
 
 abstract class BaseServer implements ServerInterface {
@@ -26,9 +27,9 @@ abstract class BaseServer implements ServerInterface {
     protected $managePidFile;
 
 
-    public function __construct(string $serverType)
+    public function __construct()
     {
-        $this->serverType    = ucfirst(strtolower($serverType));  
+        $this->host          = Process::getHost();
         $this->masterPidFile = $this->runPath . '/' . $this->processName . '.master.pid';
         $this->managePidFile = $this->runPath . '/' . $this->processName . '.manager.pid';
     }
