@@ -10,7 +10,8 @@ use Coral\Traits;
 use Coral\Utility\Process;
 use Coral\Interfs\ServerInterface;
 
-abstract class BaseServer implements ServerInterface {
+abstract class BaseServer implements ServerInterface 
+{
     use Traits\Driver;
     use Traits\ServerCallBack;
 
@@ -29,7 +30,6 @@ abstract class BaseServer implements ServerInterface {
 
     public function __construct()
     {
-        $this->host          = Process::getHost();
         $this->masterPidFile = $this->runPath . '/' . $this->processName . '.master.pid';
         $this->managePidFile = $this->runPath . '/' . $this->processName . '.manager.pid';
     }

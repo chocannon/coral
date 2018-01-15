@@ -6,7 +6,8 @@
 // +----------------------------------------------------------------------
 namespace Coral\Utility;
 
-class Posix{
+class Posix
+{
     /**
      * 根据文件获取PID
      * @param  string $pidFile 进程号文件

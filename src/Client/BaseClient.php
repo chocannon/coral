@@ -10,7 +10,8 @@ use Coral\Utility\Package;
 use Coral\Traits\ClientCallBack;
 use Coral\Interfs\ClientInterface;
 
-abstract class BaseClient implements ClientInterface {
+abstract class BaseClient implements ClientInterface 
+{
     use ClientCallBack;
 
     protected $client   = null;

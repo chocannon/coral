@@ -8,7 +8,8 @@ namespace Coral\Traits;
 
 use Coral\Utility\Posix;
 
-trait Driver{
+trait Driver
+{
     /**
      * 接受命令行参数，执行动作
      * @return [type] [description]

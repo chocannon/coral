@@ -6,7 +6,8 @@
 // +----------------------------------------------------------------------
 namespace Coral\Utility;
 
-class Package{
+class Package
+{
     /**
      * 打包
      * @param  string $data  待打包数据

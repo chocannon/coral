@@ -8,7 +8,8 @@ namespace Coral\Traits;
 
 use Coral\Utility\Process;
 
-trait ServerCallBack{
+trait ServerCallBack
+{
     public function onStart(\Swoole\Server $serv)
     {
         file_put_contents($this->masterPidFile, $serv->master_pid);

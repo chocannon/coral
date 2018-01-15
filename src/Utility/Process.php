@@ -6,26 +6,8 @@
 // +----------------------------------------------------------------------
 namespace Coral\Utility;
 
-class Process{
-    protected $logFile = '/tmp/swoole.log';
-
-    /**
-     * 获取网卡IP
-     * @return string ip
-     */
-    public static function getHost()
-    {
-        $ipList = swoole_get_local_ip();
-        if (isset($ipList['eth1']) && !empty($ipList['eth1'])) {
-            return $ipList['eth1'];
-        }
-        if (isset($ipList['eth0']) && !empty($ipList['eth0'])) {
-            return $ipList['eth0'];
-        }
-        return '0.0.0.0';
-    }
-    
-    
+class Process
+{
     /**
      * 设置进程名称
      * @param string $name 自定义进程名称

@@ -8,7 +8,8 @@ namespace Coral\Traits;
 
 use Coral\Utility\Console;
 
-trait ClientCallBack{
+trait ClientCallBack
+{
     public function onConnect(\Swoole\Client $client)
     {
 
