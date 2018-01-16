@@ -82,7 +82,7 @@ abstract class BaseServer implements ServerInterface
             default:
                 break;
         }
-        if ($this->swoole instanceof \Swoole\Server) {
+        if (!$this->swoole instanceof \Swoole\Server) {
             throw new RuntimeException("Error Init Swoole Server");
         }
 

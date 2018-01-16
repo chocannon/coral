@@ -49,7 +49,7 @@ abstract class BaseClient implements ClientInterface
     {
         $this->client = new \Swoole\Client($this->sockType, $this->syncType);
 
-        if ($this->client instanceof \Swoole\Client) {
+        if (!$this->client instanceof \Swoole\Client) {
             throw new RuntimeException("Error Init Swoole Client");
         }
 
