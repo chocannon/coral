@@ -73,7 +73,7 @@ abstract class BaseClient implements ClientInterface
      */
     public function exec(string $data)
     {
-        if ($this->client instanceof \Swoole\Client) {
+        if (!$this->client instanceof \Swoole\Client) {
             $this->initialization();
         }
         
