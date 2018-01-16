@@ -6,7 +6,6 @@
 // +----------------------------------------------------------------------
 namespace Coral\Client;
 
-use Swoole;
 use RuntimeException;
 use Coral\Utility\Package;
 use Coral\Traits\ClientCallBack;
@@ -48,9 +47,9 @@ abstract class BaseClient implements ClientInterface
      */
     protected function initialization()
     {
-        $this->client = new Client($this->sockType, $this->syncType);
+        $this->client = new \Swoole\Client($this->sockType, $this->syncType);
 
-        if ($this->client instanceof Client) {
+        if ($this->client instanceof \Swoole\Client) {
             throw new RuntimeException("Error Init Swoole Client");
         }
 
@@ -74,7 +73,7 @@ abstract class BaseClient implements ClientInterface
      */
     public function exec(string $data)
     {
-        if ($this->client instanceof Client) {
+        if ($this->client instanceof \Swoole\Client) {
             $this->initialization();
         }
         
