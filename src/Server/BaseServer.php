@@ -6,6 +6,8 @@
 // +----------------------------------------------------------------------
 namespace Coral\Server;
 
+use Swoole;
+use RuntimeException;
 use Coral\Traits;
 use Coral\Utility\Process;
 use Coral\Interfs\ServerInterface;
@@ -67,22 +69,22 @@ abstract class BaseServer implements ServerInterface
         // 实例化SWOOLE
         switch ($this->serverType) {
             case 'Http':
-                $this->swoole = new \Swoole\Http\Server(
+                $this->swoole = new Http\Server(
                     $this->host, $this->port, $this->mode, $this->sockType);
                 break;
             case 'Tcp':
-                $this->swoole = new \Swoole\Server(
+                $this->swoole = new Server(
                     $this->host, $this->port, $this->mode, $this->sockType);
                 break;
             case 'Webserver':
-                $this->swoole = new \Swoole\Websocket\Server(
+                $this->swoole = new Websocket\Server(
                     $this->host, $this->port, $this->mode, $this->sockType);
                 break;
             default:
                 break;
         }
         if (null === $this->swoole) {
-            throw new \Exception("Error Init Swoole Server");
+            throw new RuntimeException("Error Init Swoole Server");
         }
 
         // 绑定回调函数

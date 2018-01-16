@@ -6,6 +6,8 @@
 // +----------------------------------------------------------------------
 namespace Coral\Client;
 
+use Swoole;
+use RuntimeException;
 use Coral\Utility\Package;
 use Coral\Traits\ClientCallBack;
 use Coral\Interfs\ClientInterface;
@@ -46,12 +48,14 @@ abstract class BaseClient implements ClientInterface
      */
     protected function initialization()
     {
-        $this->client = new \Swoole\Client($this->sockType, $this->syncType);
-        if (null === $this->client) {
-            throw new \Exception("Error Init Swoole Client", 1);
+        $this->client = new Client($this->sockType, $this->syncType);
+
+        if ($this->client instanceof Client) {
+            throw new RuntimeException("Error Init Swoole Client");
         }
 
         $this->client->set($this->config);
+
         if (SWOOLE_SOCK_ASYNC === $this->syncType) {
             $this->cli->on('Connect', [$this, 'onConnect']);
             $this->cli->on('Receive', [$this, 'onReceive']);
@@ -70,17 +74,16 @@ abstract class BaseClient implements ClientInterface
      */
     public function exec(string $data)
     {
-        if (null === $this->client) {
+        if ($this->client instanceof Client) {
             $this->initialization();
         }
         
-        if (!$this->client->connect($this->host, $this->port, $this->timeout)) {
-            throw new \Exception("Connect Failed!", $this->client->errCode);
+        if (false === $this->client->connect($this->host, $this->port, $this->timeout)) {
+            throw new RuntimeException("Connect Failed!", $this->client->errCode);
         }
 
-        $data = Package::encode($data);
-        if (!$this->client->send($data)) {
-            throw new \Exception("Send Failed!", $this->client->errCode);
+        if (false === $this->client->send(Package::encode($data))) {
+            throw new RuntimeException("Send Failed!", $this->client->errCode);
         }
         
         $result = $this->client->recv();

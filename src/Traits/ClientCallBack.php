@@ -6,30 +6,27 @@
 // +----------------------------------------------------------------------
 namespace Coral\Traits;
 
+use Swoole;
 use Coral\Utility\Console;
 
 trait ClientCallBack
 {
-    public function onConnect(\Swoole\Client $client)
+    public function onConnect(Client $client)
     {
-
     }
 
 
-    public function onReceive(\Swoole\Client $client, string $data)
+    public function onReceive(Client $client, string $data)
     {
-
     }
 
 
-    public function onClose(\Swoole\Client $client)
+    public function onClose(Client $client)
     {
-
     }
 
 
-    public function onError(\Swoole\Client $client)
+    public function onError(Client $client)
     {
-
     }
 }
