@@ -75,12 +75,12 @@ abstract class BaseClient implements ClientInterface
         }
         
         if (!$this->client->connect($this->host, $this->port, $this->timeout)) {
-            throw new \Exception("Connect Failed!", $this->cli->errCode);
+            throw new \Exception("Connect Failed!", $this->client->errCode);
         }
 
         $data = Package::encode($data);
         if (!$this->client->send($data)) {
-            throw new \Exception("Send Failed!", $this->cli->errCode);
+            throw new \Exception("Send Failed!", $this->client->errCode);
         }
         
         $result = $this->client->recv();
