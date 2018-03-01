@@ -6,6 +6,8 @@
 // +----------------------------------------------------------------------
 namespace Coral\Utility;
 
+use RuntimeException;
+
 class Process
 {
     /**
@@ -19,7 +21,7 @@ class Process
         } elseif (function_exists('cli_set_process_title')) {
             cli_set_process_title($name);
         } else {
-            throw new Exception("Can Not Rewrite Process Name!", 1);
+            throw new RuntimeException("Can Not Rewrite Process Name!");
         }
     }
 }
