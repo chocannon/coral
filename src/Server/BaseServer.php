@@ -22,6 +22,7 @@ abstract class BaseServer implements ServerInterface
     protected $port        = 9501;
     protected $mode        = SWOOLE_PROCESS;
     protected $sockType    = SWOOLE_SOCK_TCP;
+    protected $sockSsl     = SWOOLE_SSL;
     protected $config      = [];
     protected $runPath     = '/tmp';
     protected $serverType  = 'Http';
@@ -67,6 +68,10 @@ abstract class BaseServer implements ServerInterface
     {
         // 实例化SWOOLE
         switch ($this->serverType) {
+            case 'Https':
+                $this->swoole = new \Swoole\Http\Server(
+                    $this->host, $this->port, $this->mode, $this->sockType | $this->sockSsl);
+                break;
             case 'Http':
                 $this->swoole = new \Swoole\Http\Server(
                     $this->host, $this->port, $this->mode, $this->sockType);
