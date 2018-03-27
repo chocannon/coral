@@ -101,6 +101,9 @@ abstract class BaseServer implements ServerInterface
         $this->swoole->on('ManagerStart', [$this, 'onManagerStart']);
 
         switch ($this->serverType) {
+            case 'Https':
+                 $this->swoole->on('Request', [$this, 'onRequest']);
+                break;
             case 'Http':
                 $this->swoole->on('Request', [$this, 'onRequest']);
                 break;
